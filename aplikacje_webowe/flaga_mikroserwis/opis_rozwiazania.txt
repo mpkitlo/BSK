@@ -1,0 +1,12 @@
+1. Po przeanizalwaniu kodu zauwazylem ze ostatnia flaga jest 
+wystawiana przez microserwis zad41-mimuw-finals-2023-super-secret-microservice
+2. Zauważyłem również że https://web.kazet.cc:42448/download-png/ wykonuje zapytanie 
+http a wiec prawie napewno wykona zapytanie z poziomu aplikacji i jesli zmusze jakos 
+go do zapytania na wczesniej wspomniany microserwis to bede miec rozwiazanie
+3. Następnie stworzyłem kartke którą wysłałem do 2 konta dodatkowym przyciskiem 
+<a id = "123", href=http://zad41-mimuw-finals-2023-super-secret-microservice/>123</a>
+oraz z dodstakowym scryptem w javascripcie co kline ten przycisk 
+4. teraz wystarczylo skopiowac z response.contnet token przypisany dla tego zdj i wykonac 
+zapytanie na https://web.kazet.cc:42448/download-png/{token} dzieki czemu zapytanie http do
+http://zad41-mimuw-finals-2023-super-secret-microservice wykona sie z poziomu aplikacji a nie przegladrki 
+nastepnie zapisałem response.content w formacie png gdzie po otworzenie dostałem flage.

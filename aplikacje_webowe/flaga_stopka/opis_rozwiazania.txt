@@ -1,0 +1,7 @@
+1. W kodzie apliakcji webowej znalazlem że jedna z flag znajduje sie w stopce uzytkownika o nazwie uzytkownika admin.
+2. Zauwazyłem również że kazdy uzytkownik przy wysylaniu pocztkowi wysyla rownież swoja stopke
+3. Doszedlem do oczywistej konkluzji ze potrzebuje aby admin wyslal pocztowke do mnie
+4. Po przeczytyaniu jak dziala bot obslugujacy konto admina zauwazylem ze regularnie otwiera wysylane mu pocztowki 
+5. Zauwazylem po paru testach że mozna zastapic tresc pocztowki skrytpem ktore sie bedzie wykonywal na poziomie przegladarki
+6. Probowalem wyslac pocztowke ktora zmusi admina do wyslania mi pocztowki fetchem. Niestety okazalo sie ze nie jest to taki proste bo stronie nie zgadzal sie csrftoken. 
+7. Naszczescie zauwazylem ze przy kliknieciu create za kazdym razem tworzy sie nowy token dla admina wiec zmusilem skryptem admina aby fetchem wziol GETem strone pod adresem https://web.kazet.cc:42448/create nastepnie skopiowalem csrftoken i dokleilem go do POSTa na https://web.kazet.cc:42448/create co sprawilo ze dostalem pocztwke od admina dzieki czemu mialem 1 flage 

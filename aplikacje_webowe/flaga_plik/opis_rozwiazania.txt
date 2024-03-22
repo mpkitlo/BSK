@@ -1,0 +1,4 @@
+1. Wpierw przeszukalem kod i zauwazylem ze start.sh tworzy plik flag.txt w rootcie 
+2. Zauwazyłem rownież że utils.py przy kopiowaniu templatu idzie po prawdziwej sciezce
+3. A wiec wystarczylo w skrycpie pythonwoym jako template podac ../../../../../../../flag.txt aby cofnac sie az do roota i uzyc flag.txt jako template 
+4. tym skryptem wysylalme pocztowke i czytajac response.content dostaje flage

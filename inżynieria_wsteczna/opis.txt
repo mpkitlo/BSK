@@ -1,0 +1,60 @@
+Rozwiązywałem podpunkty w kolejnosci od najmnijszej ilsoci pktow o najwiekszej:
+
+1.Po załadowaniu retask.exe do x64dbg zaczołem przeglądać funkcje w zakładce Symbols jako że trzeba sprawic zeby wpisywane hasło w komputerze sie wypisywalo a nie * to dobrym
+początkiem wydawała sie funkcja pc_keypress zauważyłem nastepnie ze woła on callem funkcje pv_putch w ktorej pod jakis adress jest ładowane * zauwazyłem rowniez ze to co wpisujemy
+na komputerze jest copiowane do r9 a wiec po prostu ta * podmienilem na r9w.
+
+2.Po ponowynm przeglądnieciu kodu zauważyłem że na początku funkcji sdl_main jest wolana wielokrotnie funkcja mark ktora po ktorkim tesowaniu i zbadniu gdzie jest wykorzystywana doszedlem
+do konkluzji że odpowiada ona za zapalania odpowiednich bitow w fladze po przeczytaniu kodu zauwazylem ze flagi zapalane odpowiedzialne za dialogi fabularne z mama to: 0, 1, 2
+i zgasic 3 zeby mamy nie bylo jednoczenie na gorze i dole. i dokladnie to zrobilem na poczatku sdl_main ustawilem flagi 0 1 2 i zgasilem 3.
+Aktualna fazy gry jest wlasnie ustalana poprzez wartosc po adresem 0x00007FF7372C1AC8 poprzez zapalenie lub zgaszenie odpowiedniego bitu
+
+3.Problem z garym jest taki ze w momencie kiedy mamy zadac decydujacy cios to zaczyna pic potiony. po przeszukani funkcji z retaska zauwazylem funkcje startegy_endless_healing.
+Po paru probach i testach zauwazylem ze wystarczy usunac calla do execute_action dzieki czemu strategia odpowiadajaca za picie potionkow nigdy sie nie ustawia i dokladnie to
+zrobilem zamienilem tego calla na nopa dzieki czemu szanse sa wyrownane i jesli wybiore charmandera i gary nie krytnie i nie bedzie pechowego rozsztrzalu obrazen to moge wygrac 
+
+4. Hasło to: p455w04d
+W pierwszej fazie sprawdzania hasła algorytm sprawdza czy hasło ma 8 liter oraz czy nie zawiera cyfr na pozycjach 0, 4 ,7 jesli tak to nie przechodzi do kolejnej czesci algorytmu i nie 
+sprawdza dalej. Jesli jednka ma 8 liter oraz nie zawiera cyfr na pozycjach 0, 4, 7 to algorytm idzie dalej. Nastepnie hasło podane przez gracza jest hashowane w następujacy sposób:
+1. wczytanie i-tego znaku hasła
+2. skopiowanie 8 bitow z zmiennej k
+3. xor na i-tym znaku hasła i tych 8 bitach 
+4. przeusniecie res o 8 bitow w prawo 
+5. xor na res i wartosci na adresie adress_hasła + (xor na i-tym znaku hasła i tych 8 bitach ) * 8 + 9730 
+6. sprawdzenie czy juz koniec hasła 
+
+Po wykonaniu tej operacji az cale haslo zostanie przebadane jest porownywane z zhashownym prawdziwym haslem 0x3E4C3F5BDF80E7D3
+
+na podstawie tego algorytmu wziolem wlasnie haslo zhashowane 0x3E4C3F5BDF80E7D3 i od tylu tym algorytmem je rozpracowalem a wiec:
+skopiowalem adresy i wartosci od r10+9790 do r10+9F20. Skoro haslo przed zskorowanie bylo przesuwane o 8 bitow w prawo to 8 najstarszych bitow bylo 0 wiec te bity sa kopiowane z adresu poprzez 
+xor a wiec wystarczy porownywac po 8 bitow z hasla z wszytkimi mozliwymi  wartosciami z wymienionych przezmnie wczesniej adresow nastepnie xorujemy  z wartoscia pod pasujacym adresem i przesuway
+o 8 bitow w lewo i powtarzamy petle. oto kod w pythonie:
+
+keys = []    
+bajt = int(h, 16) >> 56
+
+for i in range(8):
+    key_gowno = 0     
+
+    for key in map:
+        if int(map[key], 16) >> 56 == bajt:
+            key_gowno = key
+            
+    key = int(key_gowno) // 8
+    keys.append(key)
+    q_word = int(map[key_gowno], 16)
+
+    h = hex((int(h, 16) ^ q_word) << 8)
+    bajt = int(h, 16) >> 56
+
+password = []
+p_hash = 0
+
+for i in range(8):
+    password_c = keys[8 - i - 1] ^ (p_hash & 0xFF)
+    password.append(chr(password_c))
+    p_hash = int(map[str(keys[8 - i - 1] * 8)], 16) ^ (p_hash >> 8) 
+
+print(password)
+
+map - to po prostu zmpaowana wartosc zpod adresme na adres 
